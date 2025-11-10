@@ -149,7 +149,7 @@ with col2:
             with st.spinner("AI sedang membuat audio... Mohon tunggu..."):
                 try:
                     response = requests.post(
-                        "https://api.stability.ai/v1/generation/stable-audio-generate",
+                        "https://api.stability.ai/v2beta/stable-audio/generate"",
                         headers={"authorization": f"Bearer {STABILITY_API_KEY}"},
                         json={"text": audio_prompt, "model_id": "stable-audio-1.0", "duration_seconds": duration_seconds}
                     )
