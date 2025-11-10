@@ -4,8 +4,6 @@ import streamlit as st
 import requests
 
 # ------------------- KODE CSS UNTUK TAMPILAN BARU -------------------
-# Kode ini akan mengubah tampilan default Streamlit
-# menjadi lebih modern dan mirip desain Google.
 css = """
 <style>
     /* Mengubah font utama aplikasi */
@@ -144,7 +142,6 @@ with col2:
                     form_data = {
                         "prompt": audio_prompt,
                         "duration": str(duration_seconds),
-                        "output_format": "wav"
                     }
                     response = requests.post(
                         "https://api.stability.ai/v2beta/stable-audio/generate",
