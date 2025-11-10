@@ -1,4 +1,4 @@
-# File: app.py (Versi dengan Kustomisasi Tampilan)
+# File: app.py (Versi Final dengan Desain CSS dan Perbaikan URL Audio)
 
 import streamlit as st
 import requests
@@ -6,12 +6,6 @@ import requests
 # ------------------- KODE CSS UNTUK TAMPILAN BARU -------------------
 # Kode ini akan mengubah tampilan default Streamlit
 # menjadi lebih modern dan mirip desain Google.
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-# Definisikan CSS dalam sebuah string
-# Anda bisa bereksperimen dengan mengubah nilai-nilai di sini (misal: warna, ukuran)
 css = """
 <style>
     /* Mengubah font utama aplikasi */
@@ -81,11 +75,10 @@ css = """
 
 </style>
 """
-
 # ------------------- AKHIR DARI KODE CSS -------------------
 
 
-# --- LOGIKA APLIKASI ANDA (TETAP SAMA) ---
+# --- LOGIKA APLIKASI ANDA ---
 
 # Mengambil API key dari secrets
 STABILITY_API_KEY = st.secrets.get("STABILITY_API_KEY")
@@ -137,7 +130,7 @@ with col2:
     st.header("Buat Audio")
     with st.form("audio_form"):
         audio_prompt = st.text_area("Deskripsi audio yang diinginkan:", "Lagu rock epik dengan solo gitar listrik yang membara, tempo cepat.", height=150)
-        duration_seconds = st.number_input("Durasi (detik):", min_value=1, max_value=30, value=10)
+        duration_seconds = st.number_input("Durasi (detik):", min_value=1, max_value=45, value=10)
         submitted_audio = st.form_submit_button("🎵 Buat Audio Sekarang!", use_container_width=True)
 
     if submitted_audio:
@@ -148,10 +141,19 @@ with col2:
         else:
             with st.spinner("AI sedang membuat audio... Mohon tunggu..."):
                 try:
+                    form_data = {
+                        "prompt": audio_prompt,
+                        "duration": str(duration_seconds),
+                        "output_format": "wav"
+                    }
                     response = requests.post(
-                        "https://api.stability.ai/v2beta/stable-audio/generate"",
-                        headers={"authorization": f"Bearer {STABILITY_API_KEY}"},
-                        json={"text": audio_prompt, "model_id": "stable-audio-1.0", "duration_seconds": duration_seconds}
+                        "https://api.stability.ai/v2beta/stable-audio/generate",
+                        headers={
+                            "authorization": f"Bearer {STABILITY_API_KEY}",
+                            "Accept": "audio/*"
+                        },
+                        files={"none": ''},
+                        data=form_data
                     )
                     if response.status_code == 200:
                         st.audio(response.content, format='audio/wav')
